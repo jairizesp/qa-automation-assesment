@@ -14,7 +14,7 @@ test.describe(() => {
       await pdp.clickItem();
     });
 
-    await test.step("should add item to cart", async () => {
+    await test.step("should check cart items", async () => {
       const cart = new Cart(page);
 
       expect(cart.hasCartItems()).toBeTruthy();

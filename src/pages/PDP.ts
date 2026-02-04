@@ -4,20 +4,24 @@ import { Cart } from "./Cart";
 
 export class PDP extends BasePage {
   readonly inventoryList: Locator;
-  readonly sauceLabsBackpackItem: Locator;
   readonly shoppingCartIcon: Locator;
   readonly cartIcon: Locator;
   readonly cartIconBadge: Locator;
+  readonly addToCart: Locator;
+  readonly removeFromCartButton: Locator;
 
   constructor(page: Page) {
     super(page);
     this.inventoryList = this.page.locator('[data-test="inventory-container"]');
-    this.sauceLabsBackpackItem = this.page.locator(
+    this.addToCart = this.page.locator(
       '[data-test="add-to-cart-sauce-labs-backpack"]',
     );
     this.shoppingCartIcon = this.page.locator("#shopping_cart_container");
     this.cartIcon = this.page.locator('[data-test="shopping-cart-link"]');
     this.cartIconBadge = this.page.locator('[data-test="shopping-cart-badge"]');
+    this.removeFromCartButton = this.page.locator(
+      '[data-test="remove-sauce-labs-backpack"]',
+    );
   }
 
   async clickItem() {
@@ -26,7 +30,13 @@ export class PDP extends BasePage {
       oldCartBadge = (await this.cartIconBadge.textContent()) || "";
     }
 
-    await this.sauceLabsBackpackItem.click();
+    await this.addToCart.click();
+
+    //assert if the button has changed
+    await expect(this.addToCart).not.toBeVisible();
+    //assert if the remove button is visible
+    await expect(this.removeFromCartButton).toBeVisible();
+
     await this.page.waitForTimeout(300);
     const newCartBadge = await this.cartIconBadge.textContent();
 
