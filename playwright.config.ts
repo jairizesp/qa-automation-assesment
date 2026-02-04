@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, Project } from "@playwright/test";
 import "dotenv/config";
 
 /**
@@ -12,6 +12,11 @@ import "dotenv/config";
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const deviceType = (process.env.DEVICE_TYPE || "desktop").toLowerCase();
+
+const headless = process.env.HEADLESS === "false" ? false : true;
+
 export default defineConfig({
   testDir: "./tests",
   /* Run tests in files in parallel */
@@ -31,16 +36,17 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
-    headless: true,
+    headless,
     baseURL: process.env.BASE_URL as string,
   },
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
+    setProjectDependsOnDeviceType(deviceType),
+    // {
+    //   name: "chromium",
+    //   use: { ...devices["Desktop Chrome"] },
+    // },
 
     // {
     //   name: 'firefox',
@@ -80,3 +86,26 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
+
+function setProjectDependsOnDeviceType(deviceType: string): Project {
+  if (deviceType === "mobile") {
+    return {
+      name: "mobile",
+      use: {
+        ...devices["iPhone 14"],
+        viewport: { width: 375, height: 667 },
+        browserName: "chromium",
+        testMatch: /.*\.spec\.ts$/,
+      },
+    };
+  }
+  return {
+    name: "desktop",
+    use: {
+      ...devices["Desktop Chrome"],
+      viewport: { width: 1920, height: 1080 },
+      browserName: "chromium",
+      testMatch: /.*\.spec\.ts$/,
+    },
+  };
+}
