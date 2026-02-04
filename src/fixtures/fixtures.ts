@@ -1,5 +1,4 @@
 import { test as base } from "@playwright/test";
-// import { blockedDomains } from '~/constants/shared/blockedDomains';
 
 type Fixtures = {
   loginWithSessionToken: void;
