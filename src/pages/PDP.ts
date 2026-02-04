@@ -52,6 +52,6 @@ export class PDP extends BasePage {
 
     await cartPage.cartItems
       .nth(0)
-      .waitFor({ state: "visible", timeout: 5000 });
+      .waitFor({ state: "visible", timeout: 2000 });
   }
 }

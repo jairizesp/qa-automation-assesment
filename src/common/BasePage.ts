@@ -11,7 +11,7 @@ export class BasePage {
 
   // put needed custom global functions here
 
-  async loginToApplicationWithTosToken(): Promise<void> {
+  async loginToApplicationWithSessionToken(): Promise<void> {
     await this.page.context().addCookies([
       {
         name: "session-username",
